@@ -125,10 +125,11 @@ fn main() {
             };
 
             match build_dockerfile::create_dockerfile(directory) {
-                Ok() => println!("Successfully built to: {}", directory),
+                Ok(()) => println!("Successfully built to: {}", directory),
                 Err(e) => eprintln!("Error unpacking image: {}", e),
             }
         }
+        
         "push" => {
             // let image = match matches.get_one::<String>("image") {
             //     Some(image) => image,
