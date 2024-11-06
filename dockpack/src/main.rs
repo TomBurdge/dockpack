@@ -61,10 +61,11 @@
 //! [] Add buckets for bundling multiple images together for distribution
 //! [] Dynamic C library so other languages can directly interact with core functionalities to build on top of it
 use clap::{Arg, Command};
+
 use core_dockpack::cmd_processes::pull::unpack_files;
+use core_dockpack::cmd_processes::build::build_dockerfile;
 
-
-fn main() {
+fn main() {      
     // Create the Clap command line app
     let matches = Command::new("Docker Unpacker")
         .version("0.1.1")
@@ -114,6 +115,17 @@ fn main() {
 
             match unpack_files::unpack_files_from_image(image, directory) {
                 Ok(path) => println!("Successfully unpacked to: {}", path),
+                Err(e) => eprintln!("Error unpacking image: {}", e),
+            }
+        }
+        "build" => {
+            let directory = match matches.get_one::<String>("directory") {
+                Some(directory) => directory,
+                None => { "." }
+            };
+
+            match build_dockerfile::create_dockerfile(directory) {
+                Ok() => println!("Successfully built to: {}", directory),
                 Err(e) => eprintln!("Error unpacking image: {}", e),
             }
         }
