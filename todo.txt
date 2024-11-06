@@ -1,0 +1,10 @@
+1. dockpack build for creating docker file in current directory
+- 
+
+
+
+
+
+2. dockpack push for converting current directory into docker image_name (like docker build)
+3. dockpack pull for downloading docker image_name and unpacking into current directory (like docker build)
+
