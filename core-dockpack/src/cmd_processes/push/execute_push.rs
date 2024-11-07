@@ -1,6 +1,6 @@
 use crate::utils::docker_commands;
 
-pub fn execute_push(directory: &str, image: &str) -> Result<(), String> {
+pub fn execute_docker_build(directory: &str, image: &str) -> Result<(), String> {
     docker_commands::build_docker_image(directory, image)?;
     Ok(())
 }
@@ -21,7 +21,7 @@ mod tests {
         let dockerfile_content = "FROM scratch\nCOPY . .\n";
         fs::write(&dockerfile_path, dockerfile_content).expect("Failed to write Dockerfile");
 
-        let result = execute_push(directory, image_name);
+        let result = execute_docker_build(directory, image_name);
         assert!(result.is_ok());
 
         fs::remove_dir_all(directory).expect("Failed to remove test directory");
