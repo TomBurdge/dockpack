@@ -61,10 +61,12 @@
 //! [] Add buckets for bundling multiple images together for distribution
 //! [] Dynamic C library so other languages can directly interact with core functionalities to build on top of it
 use clap::{Arg, Command};
-use core_dockpack::cmd_processes::pull::unpack_files;
 
+use core_dockpack::cmd_processes:: pull::unpack_files;
+use core_dockpack::cmd_processes::build::build_dockerfile;
+use core_dockpack::cmd_processes::push::execute_push;
 
-fn main() {
+fn main() {      
     // Create the Clap command line app
     let matches = Command::new("Docker Unpacker")
         .version("0.1.1")
@@ -117,15 +119,41 @@ fn main() {
                 Err(e) => eprintln!("Error unpacking image: {}", e),
             }
         }
+        "build" => {
+            let directory = match matches.get_one::<String>("directory") {
+                Some(directory) => directory,
+                None => { 
+                    eprintln!("Directory argument is required for pull");
+                    return;
+            }
+            };
+
+            match build_dockerfile::create_dockerfile(directory) {
+                Ok(()) => println!("Successfully built to: {}", directory),
+                Err(e) => eprintln!("Error unpacking image: {}", e),
+            }
+        }
+        
         "push" => {
-            // let image = match matches.get_one::<String>("image") {
-            //     Some(image) => image,
-            //     None => {
-            //         eprintln!("Image argument is required for push");
-            //         return;
-            //     }
-            // };
-            println!("pushing images will be coming in the next version");
+            let image = match matches.get_one::<String>("image") {
+                Some(image) => image,
+                None => {
+                    eprintln!("Image argument is required for push");
+                    return;
+                }
+            };
+            let directory = match matches.get_one::<String>("directory") {
+                Some(directory) => directory,
+                None => {
+                    eprintln!("Directory argument is required for push");
+                    return;
+                }
+            };
+
+            match execute_push::execute_docker_build(directory, image) {
+                Ok(()) => println!("Successfully created docker image"),
+                Err(e) => eprintln!("Error creating docker image: {}", e),
+            }
         }
         "ls" => {
             // Placeholder for the ls command implementation
