@@ -9,6 +9,7 @@ authors = [
 requires-python = ">=3.12"
 dependencies = []
 
+# TODO: possibly comment/remove this - main function has been removed
 [project.scripts]
 pydockpack = "pydockpack:main"
 

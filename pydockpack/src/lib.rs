@@ -4,11 +4,6 @@ use pyo3::exceptions::PyException;
 
 
 #[pyfunction]
-fn hello_from_bin() -> String {
-    "Hello from pydockpack!".to_string()
-}
-
-#[pyfunction]
 fn pull_docker_image(image: String, directory: String) -> PyResult<String> {
     match unpack_files_from_image(&image, &directory) {
         Ok(path) => Ok(path),
@@ -21,7 +16,6 @@ fn pull_docker_image(image: String, directory: String) -> PyResult<String> {
 /// import the module.
 #[pymodule]
 fn _core(m: &Bound<'_, PyModule>) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(hello_from_bin, m)?)?;
     m.add_function(wrap_pyfunction!(pull_docker_image, m)?)?;
     Ok(())
 }

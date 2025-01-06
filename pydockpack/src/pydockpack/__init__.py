@@ -1,5 +1,1 @@
-from pydockpack._core import hello_from_bin, pull_docker_image as pull_docker_image
-
-
-def main() -> None:
-    print(hello_from_bin())
+from pydockpack._core import pull_docker_image as pull_docker_image
