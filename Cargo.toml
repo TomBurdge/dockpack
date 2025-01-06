@@ -5,4 +5,5 @@ members = [
     "core-dockpack", 
     "coredockpack",
     "dockpack",
+    "pydockpack"
 ]
