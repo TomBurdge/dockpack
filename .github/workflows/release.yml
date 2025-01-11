@@ -201,7 +201,7 @@ jobs:
             darwin) TARGET="$ARCH-apple-darwin" ;;
             msys*|cygwin*|mingw*) TARGET="$ARCH-pc-windows-msvc" ;;
           esac
-          VERSION=$(grep '^version = ' Cargo.toml | sed -E 's/version = "(.*)"/\1/')
+          VERSION=$(grep '^version = ' ./dock_pack/Cargo.toml | sed -E 's/version = "(.*)"/\1/')
           FILENAME="dockpack-v${VERSION}-${TARGET}"
           echo "OS=$OS" >> "$GITHUB_ENV"
           echo "ARCH=$ARCH" >> "$GITHUB_ENV"
