@@ -213,14 +213,14 @@ jobs:
         with:
           name: "${{ env.FILENAME }}"
           format: "tar.gz"
-          include: "{dockpack,dockpack.exe,README.md,LICENSE}"
+          include: "{dockpack,dockpack.exe,README.md}"
 
       - name: Compress zip
         uses: ksm2/archive-action@v1
         with:
           name: "${{ env.FILENAME }}"
           format: "zip"
-          include: "{dockpack,dockpack.exe,README.md,LICENSE}"
+          include: "{dockpack,dockpack.exe,README.md}"
 
       - name: Create or Update Release
         env:
