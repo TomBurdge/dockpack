@@ -93,7 +93,7 @@ jobs:
         run: rustup target add aarch64-unknown-linux-gnu
 
       - name: Build for ARM
-        run: cargo build --target aarch64-unknown-linux-gnu --verbose
+        run: cargo build -p dockpack --target aarch64-unknown-linux-gnu --verbose
 
   prepare-release:
     needs: [test, test-arm]
