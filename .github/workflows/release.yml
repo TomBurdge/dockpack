@@ -61,6 +61,7 @@ jobs:
     #     run: cargo test --verbose
   test-arm:
     runs-on: ubuntu-latest
+    needs: [test]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -79,7 +80,7 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/index
             target
-          key: ubuntu-latest-cargo-arm-${{ hashFiles('**/Cargo.toml') }}
+          key: ubuntu-cargo-arm-${{ hashFiles('**/Cargo.toml') }}
           restore-keys: |
             cargo-build-ubuntu-latest-arm-${{ hashFiles('**/Cargo.toml') }}
             cargo-build-ubuntu-latest-arm-
@@ -102,9 +103,49 @@ jobs:
           CC_aarch64_unknown_linux_gnu: aarch64-linux-gnu-gcc
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
         run: cargo build -p dockpack --target aarch64-unknown-linux-gnu --verbose
+      
+      - name: Get build info
+        id: build-info-linux
+        shell: bash
+        run: |
+          OK="unknown-linux-gnu"
+          ARCH="arm64"
+          TARGET="arm64-unknown-linux-gnu"
+          VERSION=$(grep '^version = ' ./dock_pack/Cargo.toml | sed -E 's/version = "(.*)"/\1/')
+          FILENAME="dockpack-v${VERSION}-${TARGET}"
+          echo "OS=$OS" >> "$GITHUB_ENV"
+          echo "ARCH=$ARCH" >> "$GITHUB_ENV"
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "FILENAME=$FILENAME" >> "$GITHUB_ENV"
+
+      - name: Compress tar.gz
+        uses: ksm2/archive-action@v1
+        with:
+          name: "${{ env.FILENAME }}"
+          format: "tar.gz"
+          include: "{dockpack,dockpack.exe,README.md}"
+    
+      - name: Compress zip
+        uses: ksm2/archive-action@v1
+        with:
+          name: "${{ env.FILENAME }}"
+          format: "zip"
+          include: "{dockpack,dockpack.exe,README.md}"
+    
+      - name: Create or Update Release
+        env:
+          VERSION: ${{ needs.prepare-release.outputs.rr_cargo_version }}
+          WORKFLOW_GIT_TAG: ${{ needs.prepare-release.outputs.workflow_git_tag}}
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "${{ env.FILENAME }}.tar.gz,${{ env.FILENAME }}.zip"
+          allowUpdates: 'true'
+          generateReleaseNotes: 'true'
+          token: ${{ secrets.RELEASE_TOKEN }}
+          tag: ${{ env.WORKFLOW_GIT_TAG }}
 
   prepare-release:
-    needs: [test, test-arm]
+    needs: [test]
     runs-on: ubuntu-latest
     outputs:
       rr_cargo_version: ${{ steps.get-version.outputs.VERSION }}
