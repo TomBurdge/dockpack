@@ -203,6 +203,7 @@ jobs:
           token: ${{ secrets.RELEASE_TOKEN }}
     
       - name: Install Rust Target for linx Arm if needed
+        shell: bash
         run: |
           if [ "${{ matrix.platform.linux-override }}" = "true" ]; then
             rustup target add aarch64-unknown-linux-gnu
@@ -364,6 +365,7 @@ jobs:
           toolchain: stable
 
       - name: Build Release
+        shell: bash
         run: |
           if [ "${{ matrix.platform.linux-override }}" = "true" ]; then
             cargo build --release --target aarch64-unknown-linux-gnu --verbose
