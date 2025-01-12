@@ -220,8 +220,8 @@ jobs:
         shell: bash
         run: |
           if [ "${{ matrix.platform.linux-override }}" = "true" ]; then
-            echo "CACHE_KEY=custom-linux-override-key" >> $GITHUB_ENV
-            echo "SECOND_CACHE_KEY=custom-linux-override-key" >> $GITHUB_ENV
+            echo "CACHE_KEY=linux-arm64" >> $GITHUB_ENV
+            echo "SECOND_CACHE_KEY=linux-arm64" >> $GITHUB_ENV
           else
             DEFAULT_KEY="${{ runner.os }}-${{ runner.arch }}"
             SECOND_DEFAULT_KEY="${{ runner.os }}-${{ runner.arch }}"
@@ -329,8 +329,8 @@ jobs:
         shell: bash
         run: |
           if [ "${{ matrix.platform.linux-override }}" = "true" ]; then
-            echo "CACHE_KEY=custom-linux-override-key" >> $GITHUB_ENV
-            echo "SECOND_CACHE_KEY=custom-linux-override-key" >> $GITHUB_ENV
+            echo "CACHE_KEY=linux-arm64" >> $GITHUB_ENV
+            echo "SECOND_CACHE_KEY=linux-arm64" >> $GITHUB_ENV
           else
             DEFAULT_KEY="${{ runner.os }}-${{ runner.arch }}"
             SECOND_DEFAULT_KEY="${{ runner.os }}-${{ runner.arch }}"
