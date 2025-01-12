@@ -134,8 +134,8 @@ jobs:
     
       - name: Create or Update Release
         env:
-          VERSION: ${{ needs.prepare-release.outputs.rr_cargo_version }}
-          WORKFLOW_GIT_TAG: ${{ needs.prepare-release.outputs.workflow_git_tag}}
+          VERSION: ${{ needs.release-arm.outputs.rr_cargo_version }}
+          WORKFLOW_GIT_TAG: ${{ needs.release-arm.outputs.workflow_git_tag}}
         uses: ncipollo/release-action@v1
         with:
           artifacts: "${{ env.FILENAME }}.tar.gz,${{ env.FILENAME }}.zip"
