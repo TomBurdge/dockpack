@@ -371,9 +371,9 @@ jobs:
         shell: bash
         run: |
           if [ "${{ matrix.platform.linux-override }}" = "true" ]; then
-            cargo build --release --target aarch64-unknown-linux-gnu --verbose
+            cargo build -p dockpack --release --target aarch64-unknown-linux-gnu --verbose
           else
-            cargo build --release --verbose
+            cargo build -p dockpack --release --verbose
           fi
 
       - name: Copy release binary to root
