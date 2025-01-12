@@ -59,9 +59,44 @@ jobs:
     #   - name: Run Tests
     #     if: ${{ github.event.inputs.skip_tests == 'false' }}
     #     run: cargo test --verbose
+  test-arm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Ensure Cargo Directories Exist for Cache Restore
+        run: |
+          mkdir -p ~/.cargo/registry
+          mkdir -p ~/.cargo/index
+          mkdir -p target
+        shell: bash
+
+      - name: Cache Cargo Registry, Index, Build
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/index
+            target
+          key: ubuntu-latest-cargo-arm-${{ hashFiles('**/Cargo.toml') }}
+          restore-keys: |
+            cargo-build-ubuntu-latest-arm-${{ hashFiles('**/Cargo.toml') }}
+            cargo-build-ubuntu-latest-arm-
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Install Rust Target
+        run: rustup target add aarch64-unknown-linux-gnu
+
+      - name: Build for ARM
+        run: cargo build --target aarch64-unknown-linux-gnu --verbose
 
   prepare-release:
-    needs: test
+    needs: [test, test-arm]
     runs-on: ubuntu-latest
     outputs:
       rr_cargo_version: ${{ steps.get-version.outputs.VERSION }}
