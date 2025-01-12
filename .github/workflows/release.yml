@@ -59,9 +59,9 @@ jobs:
     #   - name: Run Tests
     #     if: ${{ github.event.inputs.skip_tests == 'false' }}
     #     run: cargo test --verbose
-  test-arm:
+  release-arm:
     runs-on: ubuntu-latest
-    needs: [test]
+    needs: [release]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -225,7 +225,7 @@ jobs:
           echo "WORKFLOW_GIT_TAG=v$VERSION" >> "$GITHUB_OUTPUT"          
 
   release:
-    needs: prepare-release
+    needs: [prepare-release]
     if: ${{ github.event.inputs.dry_run == 'false' }}
     strategy:
       matrix:
