@@ -374,8 +374,8 @@ jobs:
       - name: Install ARM Dependencies
         if: ${{ matrix.platform.linux-override == true }}
         run: |
-          apt-get update
-          apt-get install -y gcc-aarch64-linux-gnu
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu
     
       - name: Build for ARM
         if: ${{ matrix.platform.linux-override == true }}
