@@ -366,15 +366,28 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+    
+      - name: Install Rust Target
+        if: ${{ matrix.platform.linux-override == true }}
+        run: rustup target add aarch64-unknown-linux-gnu
+        
+      - name: Install ARM Dependencies
+        if: ${{ matrix.platform.linux-override == true }}
+        run: |
+          apt-get update
+          apt-get install -y gcc-aarch64-linux-gnu
+    
+      - name: Build for ARM
+        if: ${{ matrix.platform.linux-override == true }}
+        env:
+          CC: aarch64-linux-gnu-gcc
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
+        run: cargo build -p dockpack --release --target aarch64-unknown-linux-gnu --verbose
 
       - name: Build Release
+        if: ${{ matrix.platform.linux-override == false }}
         shell: bash
-        run: |
-          if [ "${{ matrix.platform.linux-override }}" = "true" ]; then
-            cargo build -p dockpack --release --target aarch64-unknown-linux-gnu --verbose
-          else
-            cargo build -p dockpack --release --verbose
-          fi
+        run: cargo build -p dockpack --release --verbose
 
       - name: Copy release binary to root
         shell: bash
