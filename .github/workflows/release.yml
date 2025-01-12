@@ -217,6 +217,7 @@ jobs:
         shell: bash
     
       - name: Determine Cache Key
+        shell: bash
         run: |
           if [ "${{ matrix.platform.linux-override }}" = "true" ]; then
             echo "CACHE_KEY=custom-linux-override-key" >> $GITHUB_ENV
@@ -325,6 +326,7 @@ jobs:
           fi
 
       - name: Determine Cache Key
+        shell: bash
         run: |
           if [ "${{ matrix.platform.linux-override }}" = "true" ]; then
             echo "CACHE_KEY=custom-linux-override-key" >> $GITHUB_ENV
