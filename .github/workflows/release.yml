@@ -97,6 +97,42 @@ jobs:
 
       - name: Install Rust Target
         run: rustup target add aarch64-unknown-linux-gnu
+    
+      - name: Install cargo-release
+        run: |
+          if ! command -v cargo-release &> /dev/null; then
+            echo "Installing cargo-release..."
+            cargo install cargo-release
+          else
+            INSTALLED_VERSION=$(cargo release --version || echo "unknown")
+            echo "cargo-release already installed (version: $INSTALLED_VERSION). Skipping installation."
+          fi          
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"          
+
+      - name: Update Cargo.toml version and push to GitHub
+        run: |
+          REL_TYPE=${{ github.event.inputs.type }}
+          DRY_RUN=${{ github.event.inputs.dry_run }}
+
+          # Execute version update
+          if [ "$DRY_RUN" = "false" ]; then
+            echo "Updating version in Cargo.toml"
+            cargo release --verbose --execute --no-confirm $REL_TYPE --no-publish --no-verify
+          else
+            echo "Dry run: showing changes without executing"
+            cargo release --verbose $REL_TYPE --no-publish --no-verify
+          fi          
+
+      - name: Get Version from Cargo.toml
+        id: get-version
+        run: |
+          VERSION=$(grep '^version = ' Cargo.toml | sed -E 's/version = "(.*)"/\1/')
+          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "WORKFLOW_GIT_TAG=v$VERSION" >> "$GITHUB_OUTPUT"   
 
       - name: Build for ARM
         env:
