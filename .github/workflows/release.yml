@@ -318,6 +318,7 @@ jobs:
         shell: bash
     
       - name: Install Rust Target for linx Arm if needed
+        shell: bash
         run: |
           if [ "${{ matrix.platform.linux-override }}" = "true" ]; then
             rustup target add aarch64-unknown-linux-gnu
