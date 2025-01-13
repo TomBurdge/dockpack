@@ -1,0 +1,24 @@
+[project]
+name = "pydockpack"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Maxwell Flitton", email = "maxwell.flitton@gmail.com" }
+]
+requires-python = ">=3.9"
+dependencies = []
+
+classifiers = ["Environment :: Console"]
+
+[tool.maturin]
+bindings = "bin"
+module-name = "dockpack"
+manifest-path="../dockpack/Cargo.toml"
+python-packages = ["dockpack"]
+python-source = "src"
+strip = true
+
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
