@@ -375,6 +375,7 @@ jobs:
         if: ${{ matrix.platform.linux-override == true }}
         run: |
           echo "deb http://deb.debian.org/debian buster main" | sudo tee -a /etc/apt/sources.list
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 648ACFD622F3D138 0E98404D386FA1D9 DCC9EFBF77E11517
           sudo apt-get update
           sudo apt-get install musl-tools gcc-aarch64-linux-musl
     
