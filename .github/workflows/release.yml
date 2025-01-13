@@ -248,17 +248,17 @@ jobs:
           RUSTFLAGS: "-C target-feature=+crt-static"
         run: cargo build -p dockpack --release --target aarch64-unknown-linux-gnu --verbose
     
-    #   - name: Build for x86 Linux (Static Binary)
-    #     if: ${{ matrix.platform.linux-override == false && matrix.platform.os == 'ubuntu-latest' }}
-    #     env:
-    #       CC_x86_64_unknown_linux_gnu: gcc
-    #       CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER: gcc
-    #       RUSTFLAGS: "-C target-feature=+crt-static"
-    #     run: cargo build -p dockpack --release --target x86_64-unknown-linux-gnu --verbose
+      - name: Build for x86 Linux (Static Binary)
+        if: ${{ matrix.platform.linux-override == false && matrix.platform.os == 'ubuntu-latest' }}
+        env:
+          CC_x86_64_unknown_linux_gnu: gcc
+          CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER: gcc
+          RUSTFLAGS: "-C target-feature=+crt-static"
+        run: cargo build -p dockpack --release --target x86_64-unknown-linux-gnu --verbose
 
       - name: Build Release
-        # if: ${{ matrix.platform.linux-override == false && matrix.platform.os != 'ubuntu-latest' }}
-        if: ${{ matrix.platform.linux-override == false }}
+        if: ${{ matrix.platform.linux-override == false && matrix.platform.os != 'ubuntu-latest' }}
+        # if: ${{ matrix.platform.linux-override == false }}
         shell: bash
         env:
             RUSTFLAGS: "-C target-feature=+crt-static"
