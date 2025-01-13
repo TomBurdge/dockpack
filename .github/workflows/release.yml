@@ -206,7 +206,7 @@ jobs:
         shell: bash
         run: |
           if [ "${{ matrix.platform.linux-override }}" = "true" ]; then
-            rustup target add aarch64-unknown-linux-musl
+            rustup target add aarch64-unknown-linux-gnu
           fi
 
       - name: Ensure Cargo Directories Exist for Cache Restore
@@ -322,7 +322,7 @@ jobs:
         shell: bash
         run: |
           if [ "${{ matrix.platform.linux-override }}" = "true" ]; then
-            rustup target add aarch64-unknown-linux-musl
+            rustup target add aarch64-unknown-linux-gnu
           fi
 
       - name: Determine Cache Key
@@ -369,22 +369,21 @@ jobs:
     
       - name: Install Rust Target
         if: ${{ matrix.platform.linux-override == true }}
-        run: rustup target add aarch64-unknown-linux-musl
+        run: rustup target add aarch64-unknown-linux-gnu
         
       - name: Install ARM Dependencies
         if: ${{ matrix.platform.linux-override == true }}
         run: |
-          echo "deb http://deb.debian.org/debian buster main" | sudo tee -a /etc/apt/sources.list
-          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 648ACFD622F3D138 0E98404D386FA1D9 DCC9EFBF77E11517
           sudo apt-get update
-          sudo apt-get install musl-tools gcc-aarch64-linux-musl
+          sudo apt-get install -y build-essential gcc-aarch64-linux-gnu
     
-      - name: Build for ARM
+      - name: Build for ARM (Static Binary)
         if: ${{ matrix.platform.linux-override == true }}
         env:
-          CC: aarch64-linux-musl-gcc
-          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-musl-gcc
-        run: cargo build -p dockpack --release --target aarch64-unknown-linux-musl --verbose
+          CC_aarch64_unknown_linux_gnu: aarch64-linux-gnu-gcc
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
+          RUSTFLAGS: "-C target-feature=+crt-static"
+        run: cargo build -p dockpack --release --target aarch64-unknown-linux-gnu --verbose
 
       - name: Build Release
         if: ${{ matrix.platform.linux-override == false }}
@@ -396,8 +395,8 @@ jobs:
         run: |
           if [[ -f "target/release/dockpack" ]]; then
             cp target/release/dockpack .
-          elif [[ -f "target/aarch64-unknown-linux-musl/release/dockpack" ]]; then
-            cp target/aarch64-unknown-linux-musl/release/dockpack .
+          elif [[ -f "target/aarch64-unknown-linux-gnu/release/dockpack" ]]; then
+            cp target/aarch64-unknown-linux-gnu/release/dockpack .
           elif [[ -f "target/release/dockpack.exe" ]]; then
             cp target/release/dockpack.exe .
           else
