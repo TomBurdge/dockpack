@@ -43,7 +43,7 @@ case "$OS" in
 esac
 
 # Define download URL
-VERSION="v0.1.9" # Replace with the correct version
+VERSION="v0.1.12" # Replace with the correct version
 FILENAME="dockpack-${VERSION}-${TARGET}.zip"
 DOWNLOAD_URL="https://github.com/maxwellflitton/dockpack/releases/download/v/$FILENAME" # Replace with actual download URL
 # Download the zip file
