@@ -374,6 +374,7 @@ jobs:
       - name: Install ARM Dependencies
         if: ${{ matrix.platform.linux-override == true }}
         run: |
+          echo "deb http://deb.debian.org/debian buster main" | sudo tee -a /etc/apt/sources.list
           sudo apt-get update
           sudo apt-get install musl-tools gcc-aarch64-linux-musl
     
