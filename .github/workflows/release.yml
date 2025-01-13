@@ -258,7 +258,7 @@ jobs:
 
       - name: Build Release
         # if: ${{ matrix.platform.linux-override == false && matrix.platform.os != 'ubuntu-latest' }}
-        if: ${{ matrix.platform.linux-override }}
+        if: ${{ matrix.platform.linux-override == false }}
         shell: bash
         env:
             RUSTFLAGS: "-C target-feature=+crt-static"
