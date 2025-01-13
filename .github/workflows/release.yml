@@ -206,7 +206,7 @@ jobs:
         shell: bash
         run: |
           if [ "${{ matrix.platform.linux-override }}" = "true" ]; then
-            rustup target add aarch64-unknown-linux-gnu
+            rustup target add aarch64-unknown-linux-musl
           fi
 
       - name: Ensure Cargo Directories Exist for Cache Restore
@@ -322,7 +322,7 @@ jobs:
         shell: bash
         run: |
           if [ "${{ matrix.platform.linux-override }}" = "true" ]; then
-            rustup target add aarch64-unknown-linux-gnu
+            rustup target add aarch64-unknown-linux-musl
           fi
 
       - name: Determine Cache Key
@@ -369,7 +369,7 @@ jobs:
     
       - name: Install Rust Target
         if: ${{ matrix.platform.linux-override == true }}
-        run: rustup target add aarch64-unknown-linux-gnu
+        run: rustup target add aarch64-unknown-linux-musl
         
       - name: Install ARM Dependencies
         if: ${{ matrix.platform.linux-override == true }}
@@ -382,7 +382,7 @@ jobs:
         env:
           CC: aarch64-linux-gnu-gcc
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
-        run: cargo build -p dockpack --release --target aarch64-unknown-linux-gnu --verbose
+        run: cargo build -p dockpack --release --target aarch64-unknown-linux-musl --verbose
 
       - name: Build Release
         if: ${{ matrix.platform.linux-override == false }}
@@ -394,8 +394,8 @@ jobs:
         run: |
           if [[ -f "target/release/dockpack" ]]; then
             cp target/release/dockpack .
-          elif [[ -f "target/aarch64-unknown-linux-gnu/release/dockpack" ]]; then
-            cp target/aarch64-unknown-linux-gnu/release/dockpack .
+          elif [[ -f "target/aarch64-unknown-linux-musl/release/dockpack" ]]; then
+            cp target/aarch64-unknown-linux-musl/release/dockpack .
           elif [[ -f "target/release/dockpack.exe" ]]; then
             cp target/release/dockpack.exe .
           else
