@@ -14,7 +14,7 @@ classifiers = ["Environment :: Console"]
 [tool.maturin]
 bindings = "bin"
 module-name = "dockpack"
-manifest-path="../dockpack/Cargo.toml"
+manifest-path="../dock_pack/Cargo.toml"
 python-packages = ["dockpack"]
 python-source = "src"
 strip = true
