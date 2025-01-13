@@ -375,13 +375,13 @@ jobs:
         if: ${{ matrix.platform.linux-override == true }}
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcc-aarch64-linux-gnu
+          sudo apt-get install musl-tools gcc-aarch64-linux-musl
     
       - name: Build for ARM
         if: ${{ matrix.platform.linux-override == true }}
         env:
-          CC: aarch64-linux-gnu-gcc
-          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
+          CC: aarch64-linux-musl-gcc
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-musl-gcc
         run: cargo build -p dockpack --release --target aarch64-unknown-linux-musl --verbose
 
       - name: Build Release
