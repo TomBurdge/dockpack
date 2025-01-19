@@ -1,15 +1,16 @@
 class DockPack < Formula
+    # TODO: make manually updating this unnecessary
     version 'v0.1.12'
     desc "Recursively search directories for a regex pattern."
     homepage "https://github.com/MaxwellFlitton/dockpack"
   
     if OS.mac?
         url "https://github.com/Maxwellflitton/dockpack/releases/download/#{version}/dockpack-#{version}-x86_64-apple-darwin.tar.gz"
-        # Presumably this by the CI/CD on the release - ignore currently
+        # TODO: add a sha, which gets updated but doesn't need manual updating
         sha256 "no_check"
     elsif OS.linux?
         url "https://github.com/MaxwellFlitton/dockpack/releases/download/#{version}/dockpack-#{version}-x86_64-unknown-linux-musl.tar.gz"
-        # Presumably this by the CI/CD on the release
+        # TODO: add a sha, which gets updated but doesn't need manual updating
         sha256 "no_check"
     end
   
