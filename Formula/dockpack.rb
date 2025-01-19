@@ -1,7 +1,7 @@
 class DockPack < Formula
     # TODO: make manually updating this unnecessary
     version 'v0.1.12'
-    desc "Recursively search directories for a regex pattern."
+    desc "Unpack files from a Docker image into a directory, essentially enabling you to use Docker to distribute files."
     homepage "https://github.com/MaxwellFlitton/dockpack"
   
     if OS.mac?
