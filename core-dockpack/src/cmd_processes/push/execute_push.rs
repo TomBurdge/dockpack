@@ -1,3 +1,4 @@
+use crate::utils::cache;
 use bollard::models::CreateImageInfo;
 use bollard::Docker;
 use futures_util::stream::TryStreamExt;
@@ -5,7 +6,7 @@ use tokio::fs::File;
 use tokio_util::io::ReaderStream;
 
 async fn dir_to_tar(dir: &str, image_name: &str) -> Result<(), String> {
-    let tar_name = &format!("{}.tar", image_name);
+    let tar_name = &format!("{}.tar", cache::process_image_name(image_name));
     let tar = File::create(tar_name)
         .await
         .expect("Could not create archive file");
