@@ -9,12 +9,10 @@ use tokio_tar::Archive;
 use tokio_util::io::ReaderStream;
 
 async fn dir_to_tar(dir: &str, image_name: &str) -> Result<(), String> {
-    // TODO: create/use a tmp dir when archiving
     let tar_name = &format!("{}.tar", image_name);
     let tar = File::create(tar_name)
         .await
         .expect("Could not create archive file");
-    /// let enc = GzEncoder::new(tar, Compression::default());
     let mut tar = tokio_tar::Builder::new(tar);
     tar.append_dir_all("", dir)
         .await
