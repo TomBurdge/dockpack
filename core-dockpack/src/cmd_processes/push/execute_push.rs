@@ -1,11 +1,7 @@
-use crate::utils::docker_commands;
 use bollard::models::CreateImageInfo;
 use bollard::Docker;
-use flate2::write::GzEncoder;
-use flate2::Compression;
 use futures_util::stream::TryStreamExt;
 use tokio::fs::File;
-use tokio_tar::Archive;
 use tokio_util::io::ReaderStream;
 
 async fn dir_to_tar(dir: &str, image_name: &str) -> Result<(), String> {
@@ -41,7 +37,7 @@ pub async fn execute_docker_build(directory: &str, image: &str) -> Result<(), St
         .tag("1.0.0") // The tag of this particular image.
         .build();
 
-    let result: Vec<CreateImageInfo> = docker
+    let _: Vec<CreateImageInfo> = docker
         .create_image(Some(options), Some(bollard::body_try_stream(stream)), None)
         .try_collect()
         .await
@@ -65,9 +61,9 @@ mod tests {
         let dockerfile_content = "FROM scratch\nCOPY . .\n";
         fs::write(&dockerfile_path, dockerfile_content).expect("Failed to write Dockerfile");
 
-        let result = dir_to_tar(directory, image_name);
+        let result = dir_to_tar(directory, image_name).await;
 
-        assert!(result.await.is_ok());
+        assert!(result.is_ok());
 
         // fs::remove_dir_all(directory).expect("Failed to remove test directory");
     }
@@ -82,8 +78,8 @@ mod tests {
         let dockerfile_content = "FROM scratch\nCOPY . .\n";
         fs::write(&dockerfile_path, dockerfile_content).expect("Failed to write Dockerfile");
 
-        let result = execute_docker_build(directory, image_name);
-        assert!(result.await.is_ok());
+        let result = execute_docker_build(directory, image_name).await;
+        assert!(result.is_ok());
 
         // fs::remove_dir_all(directory).expect("Failed to remove test directory");
     }

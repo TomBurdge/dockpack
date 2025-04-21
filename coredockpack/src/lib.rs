@@ -1,7 +1,6 @@
-use std::ffi::{CString, CStr};
-use std::os::raw::c_char;
 use core_dockpack::cmd_processes::pull::unpack_files::unpack_files_from_image;
-
+use std::ffi::{CStr, CString};
+use std::os::raw::c_char;
 
 /// Unpacks the files from a Docker image into a directory.
 ///
@@ -12,10 +11,11 @@ use core_dockpack::cmd_processes::pull::unpack_files::unpack_files_from_image;
 /// # Returns
 /// A C string with the path to the directory where the Docker image files are stored.
 /// On error, returns a null pointer.
+#[allow(clippy::not_unsafe_ptr_arg_deref)]
 #[no_mangle]
 pub extern "C" fn unpack_files_from_image_c(
-    image: *const c_char, 
-    directory: *const c_char
+    image: *const c_char,
+    directory: *const c_char,
 ) -> *const c_char {
     // Convert C strings to Rust strings
     let image = unsafe { CStr::from_ptr(image).to_string_lossy().into_owned() };

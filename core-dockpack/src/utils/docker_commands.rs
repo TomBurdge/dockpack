@@ -1,9 +1,8 @@
 //! Defines the actions around downloading and unpacking docker images to access the files.
+use super::cache::process_image_name;
+use std::fs::File;
 use std::process::Command;
 use tar::Archive;
-use std::fs::File;
-use super::cache::process_image_name;
-
 
 /// Pulls a docker image from the docker registry.
 ///
@@ -15,7 +14,8 @@ use super::cache::process_image_name;
 pub fn pull_docker_image(image_name: &str) -> Result<(), String> {
     let status = Command::new("docker")
         .args(["pull", image_name])
-        .status().map_err(|e| e.to_string())?;
+        .status()
+        .map_err(|e| e.to_string())?;
 
     if status.success() {
         Ok(())
@@ -23,7 +23,6 @@ pub fn pull_docker_image(image_name: &str) -> Result<(), String> {
         Err("Failed to pull Docker image".to_string())
     }
 }
-
 
 /// Extracts the Tar file from the Docker image, and saves it to the specified path.
 ///
@@ -41,14 +40,12 @@ pub fn save_docker_image(image_name: &str, tar_path: &str) -> Result<String, Str
 
     let tar_path = std::path::Path::new(tar_path);
     let tar_file = image_name;
-    let tar_file = process_image_name(&tar_file.to_string());
+    let tar_file = process_image_name(tar_file);
 
     let binding = tar_path.join(format!("{}.tar", tar_file));
     let unpack_tar_path = match binding.to_str() {
         Some(v) => v,
-        None => {
-            return Err("Failed to convert path to string".to_string())
-        }
+        None => return Err("Failed to convert path to string".to_string()),
     };
     let package_path = tar_path.join(tar_file);
 
@@ -56,7 +53,8 @@ pub fn save_docker_image(image_name: &str, tar_path: &str) -> Result<String, Str
 
     let _ = Command::new("docker")
         .args(["save", "-o", unpack_tar_path, image_name])
-        .status().map_err(|e| e.to_string())?;
+        .status()
+        .map_err(|e| e.to_string())?;
 
     let tar_file = File::open(unpack_tar_path).map_err(|e| e.to_string())?;
     let mut archive = Archive::new(tar_file);
@@ -66,9 +64,7 @@ pub fn save_docker_image(image_name: &str, tar_path: &str) -> Result<String, Str
     // return statement
     Ok(match package_path.to_str() {
         Some(v) => v.to_string(),
-        None => {
-            return Err("Failed to convert path to string".to_string())
-        }
+        None => return Err("Failed to convert path to string".to_string()),
     })
 }
 
@@ -77,9 +73,10 @@ pub fn save_docker_image(image_name: &str, tar_path: &str) -> Result<String, Str
 pub fn build_docker_image(directory: &str, image: &str) -> Result<(), String> {
     let platforms = "linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6,linux/s390x,linux/ppc64le";
     let status = Command::new("docker")
-    .args(["build", "--platform", platforms, "-t", image])
-    .arg(directory) // Add the directory as a separate argument
-    .status().map_err(|e| e.to_string())?;
+        .args(["build", "--platform", platforms, "-t", image])
+        .arg(directory) // Add the directory as a separate argument
+        .status()
+        .map_err(|e| e.to_string())?;
 
     if status.success() {
         Ok(())

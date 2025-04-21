@@ -1,11 +1,10 @@
 //! Defines the actions around unpacking compressed Docker files from the manifest.
+use flate2::read::GzDecoder;
+use serde_json::Value;
 use std::fs::File;
 use std::io::{Read, Seek, SeekFrom};
 use std::path::Path;
-use serde_json::Value;
 use tar::Archive;
-use flate2::read::GzDecoder;
-
 
 /// Checks if the given file is gzipped by reading its magic number.
 ///
@@ -26,7 +25,6 @@ fn check_if_gzipped(file: &mut File) -> std::io::Result<bool> {
     Ok(magic_number == [0x1f, 0x8b])
 }
 
-
 /// Reads a JSON file.
 ///
 /// # Notes
@@ -42,7 +40,6 @@ fn read_json_file<P: AsRef<Path>>(path: P) -> std::io::Result<Value> {
     Ok(serde_json::from_str(&contents)?)
 }
 
-
 /// Decompresses the layers from the Docker image and extracts them to a directory.
 ///
 /// # Arguments
@@ -52,13 +49,12 @@ fn read_json_file<P: AsRef<Path>>(path: P) -> std::io::Result<Value> {
 /// # Returns
 /// The path to where the layers are extracted.
 pub fn extract_layers(main_path: &str, unpack_path: &str) -> Result<String, String> {
-
     let manifest_path = std::path::Path::new(main_path).join("manifest.json");
     let blobs_dir = std::path::Path::new(main_path);
     let unpack_path = std::path::Path::new(unpack_path);
 
     if !unpack_path.exists() {
-        std::fs::create_dir_all(&unpack_path).map_err(|e| e.to_string())?;
+        std::fs::create_dir_all(unpack_path).map_err(|e| e.to_string())?;
     }
 
     let manifest = read_json_file(&manifest_path).map_err(|e| e.to_string())?;
@@ -70,7 +66,6 @@ pub fn extract_layers(main_path: &str, unpack_path: &str) -> Result<String, Stri
             let base_path = blobs_dir;
 
             let layer_path = base_path.join(
-                
                 match layer.as_str() {
                     Some(layer) => layer,
                     None => {
@@ -89,7 +84,7 @@ pub fn extract_layers(main_path: &str, unpack_path: &str) -> Result<String, Stri
                     let decompressed = GzDecoder::new(tar_file);
                     let mut archive = Archive::new(decompressed);
                     archive.unpack(unpack_path).map_err(|e| e.to_string())?;
-                },
+                }
                 false => {
                     println!("Layer is not gzipped");
                     let mut archive = Archive::new(tar_file);
@@ -97,15 +92,17 @@ pub fn extract_layers(main_path: &str, unpack_path: &str) -> Result<String, Stri
                 }
             }
         }
-    }
-    else {
+    } else {
         println!("No layers found in manifest");
     }
 
-    Ok(match unpack_path.to_str(){
+    Ok(match unpack_path.to_str() {
         Some(v) => v.to_string(),
         None => {
-            return Err("Failed to convert path to string when extracting layers from the Docker image".to_string());
+            return Err(
+                "Failed to convert path to string when extracting layers from the Docker image"
+                    .to_string(),
+            );
         }
     })
 }
