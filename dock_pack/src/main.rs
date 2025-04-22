@@ -117,7 +117,7 @@ async fn main() {
                 }
             };
 
-            match unpack_files::unpack_files_from_image(image, directory) {
+            match unpack_files::unpack_files_from_image(image, directory).await {
                 Ok(path) => println!("Successfully unpacked to: {}", path),
                 Err(e) => eprintln!("Error unpacking image: {}", e),
             }
