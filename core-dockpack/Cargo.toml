@@ -9,3 +9,6 @@ license = "MIT"
 tar = "0.4.40"
 serde_json = "1.0.115"
 flate2 = "1.0.28"
+serde_yaml = "0.9.34"
+semver = "1.0.26"
+serde = { version = "1.0.219", features = ["derive"] }
