@@ -10,6 +10,7 @@ license = "MIT"
 # core-dockpack = { version = "0.1.1" }
 core-dockpack = { path = "../core-dockpack" }
 clap = { version = "4.0", features = ["derive"] }
+tokio = "1.44.2"
 
 [[bin]]
 name = "dockpack"
