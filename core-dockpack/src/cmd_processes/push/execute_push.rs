@@ -66,7 +66,7 @@ mod tests {
 
         assert!(result.is_ok());
 
-        // fs::remove_dir_all(directory).expect("Failed to remove test directory");
+        fs::remove_dir_all(directory).expect("Failed to remove test directory");
     }
 
     #[tokio::test]
@@ -82,6 +82,6 @@ mod tests {
         let result = execute_docker_build(directory, image_name).await;
         assert!(result.is_ok());
 
-        // fs::remove_dir_all(directory).expect("Failed to remove test directory");
+        fs::remove_dir_all(directory).expect("Failed to remove test directory");
     }
 }

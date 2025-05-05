@@ -46,6 +46,6 @@ mod tests {
         assert!(result.is_ok());
         let path = result.unwrap();
         assert!(Path::new(&path).exists());
-        // fs::remove_dir_all(directory).unwrap();
+        fs::remove_dir_all(directory).unwrap();
     }
 }
