@@ -25,12 +25,9 @@ pub async fn execute_docker_build(directory: &str, image: &str) -> Result<()> {
     // Convert directory to a tar file
     let tar_path = dir_to_tar(directory, image).await?;
 
-    let file = File::open(tar_path).await.with_context(|| {
-        format!(
-            "Could not find archive at path {}.",
-            format!("{}.tar", image)
-        )
-    })?;
+    let file = File::open(tar_path)
+        .await
+        .with_context(|| format!("Could not find archive at path {}.tar", image))?;
     let stream = ReaderStream::new(file);
 
     let docker = Docker::connect_with_socket_defaults()

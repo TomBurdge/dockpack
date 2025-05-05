@@ -58,8 +58,8 @@ pub fn extract_layers(main_path: &str, unpack_path: &str) -> Result<String> {
         std::fs::create_dir_all(unpack_path).with_context(|| "Error creating directory")?;
     }
 
-    let manifest = read_json_file(&manifest_path)
-        .with_context(|| format!("Error reading json manifest file"))?;
+    let manifest =
+        read_json_file(&manifest_path).with_context(|| "Error reading json manifest file")?;
 
     if let Some(layers) = manifest[0]["Layers"].as_array() {
         println!("Found {} layers in manifest", layers.len());
@@ -78,10 +78,9 @@ pub fn extract_layers(main_path: &str, unpack_path: &str) -> Result<String> {
             });
 
             // Extract the layer's tarball to a directory
-            let mut tar_file =
-                File::open(&layer_path).with_context(|| format!("Error reading tar file"))?;
+            let mut tar_file = File::open(&layer_path).with_context(|| "Error reading tar file")?;
             let if_gzipped = check_if_gzipped(&mut tar_file)
-                .with_context(|| format!("Erorr checcking if tar fle is gzipped"))?;
+                .with_context(|| "Error checking if tar fle is gzipped")?;
             match if_gzipped {
                 true => {
                     println!("Layer is gzipped");
