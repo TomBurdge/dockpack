@@ -12,6 +12,7 @@ use std::os::raw::c_char;
 /// A C string with the path to the directory where the Docker image files are stored.
 /// On error, returns a null pointer.
 #[allow(clippy::not_unsafe_ptr_arg_deref)]
+#[allow(improper_ctypes_definitions)]
 #[no_mangle]
 pub async extern "C" fn unpack_files_from_image_c(
     image: *const c_char,

@@ -1,21 +1,21 @@
 //! Defines the actions around downloading and unpacking docker images to access the files.
 use super::cache::process_image_name;
 use anyhow::{anyhow, Context, Result};
-use bollard::image::CreateImageOptions;
+use bollard::query_parameters::CreateImageOptionsBuilder;
 use bollard::Docker;
 use futures_util::stream::TryStreamExt;
 use futures_util::StreamExt;
-use std::default::Default;
 use std::process::Command;
 use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
 use tokio_tar::Archive;
 
 async fn pull_image(image_name: &str, docker: &Docker) -> Result<()> {
-    let options = Some(CreateImageOptions {
-        from_image: image_name,
-        ..Default::default()
-    });
+    let options = Some(
+        CreateImageOptionsBuilder::new()
+            .from_image(image_name)
+            .build(),
+    );
     println!("image_name: {}", image_name);
     // confirmed: this works
     docker
