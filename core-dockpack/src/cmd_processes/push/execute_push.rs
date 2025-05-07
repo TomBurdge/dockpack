@@ -31,7 +31,7 @@ pub async fn execute_docker_build(directory: &str, image: &str) -> Result<()> {
     let stream = ReaderStream::new(file);
 
     let docker = Docker::connect_with_socket_defaults()
-        .with_context(|| "Could no connect to docker socket. Is docker running?")?;
+        .with_context(|| "Could not connect to docker socket. Is docker running?")?;
 
     let options = bollard::query_parameters::CreateImageOptionsBuilder::default()
         .from_src("-") // from_src must be "-" when sending the archive in the request body
