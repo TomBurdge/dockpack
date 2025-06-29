@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from python import unpack_files_from_image
+from dockpack_py import unpack_files_from_image
 import os
 import shutil
 
