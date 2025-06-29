@@ -13,4 +13,5 @@ def test_execute_push():
 
     result = unpack_files_from_image(image_name, directory)
     assert os.path.exists(directory)
+    assert result == directory
     shutil.rmtree(directory)
