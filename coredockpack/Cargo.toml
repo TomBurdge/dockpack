@@ -2,6 +2,7 @@
 name = "coredockpack"
 version = "0.1.8"
 edition = "2021"
+build = "build.rs"
 
 [dependencies]
 core-dockpack = { path = "../core-dockpack" }
@@ -10,3 +11,6 @@ tokio = "1.45.1"
 
 [lib]
 crate-type = ["cdylib"]
+
+[build-dependencies]
+cbindgen = "0.29.0"
