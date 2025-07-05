@@ -3,6 +3,7 @@ from .dockpack_py import ffi, lib
 __all__ = ["ffi", "lib", "unpack_files_from_image"]
 
 
+# I tried this with a decorator to be more DRY and it was way less readable
 def unpack_files_from_image(image_name: str, directory: str) -> str:
     image: bytes = image_name.encode("utf-8")
     dir: bytes = directory.encode("utf-8")
