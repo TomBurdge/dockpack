@@ -20,6 +20,7 @@ def test_execute_push():
 
 
 # This currently fails/panicks, because pushing to remote needs remote auth
+# It's the same failure/behaviour as the rust crate test
 def test_push(test_image_dir, dockerfile_path):
     image_name = "test_image:latest"
     with open(dockerfile_path, "w") as f:
