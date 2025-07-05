@@ -17,3 +17,6 @@ tokio-util = { version = "0.7.14", features = ["io"] }
 tokio-tar = "0.3.1"
 futures-core = "0.3.31"
 anyhow = "1.0.98"
+
+[dev-dependencies]
+dotenv = "0.15.0"

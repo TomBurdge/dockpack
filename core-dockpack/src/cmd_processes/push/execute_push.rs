@@ -37,7 +37,6 @@ pub async fn execute_docker_build(directory: &str, image: &str) -> Result<()> {
     let options = CreateImageOptionsBuilder::default()
         .from_src("-") // from_src must be "-" when sending the archive in the request body
         .repo(image) // The name of the image in the docker daemon.
-        .tag("1.0.0") // The tag of this particular image.
         .build();
     let _: Vec<CreateImageInfo> = docker
         .create_image(Some(options), Some(bollard::body_try_stream(stream)), None)
@@ -47,7 +46,7 @@ pub async fn execute_docker_build(directory: &str, image: &str) -> Result<()> {
 
     let options = PushImageOptionsBuilder::new().tag("latest").build();
     let _: Vec<PushImageInfo> = docker
-        .push_image(&cache::process_image_name(image), Some(options), None)
+        .push_image(image, Some(options), None)
         .try_collect()
         .await
         .with_context(|| "Could not push image")?;
@@ -79,7 +78,16 @@ mod tests {
 
     #[tokio::test]
     async fn test_execute_push() {
-        let image_name = "test_image:latest";
+        use dotenv::dotenv;
+        use std::env;
+        dotenv().ok();
+        let registry = env::var("docker_reg")
+            .expect("You must have a reference to a valid registry to push to.
+You could set up a local docker registry by running the command first: docker run -d -p 5000:5000 --name registry registry:2.
+Then set docker_reg in your .env file as localhost:5000.");
+
+        let image_name = format!("{}/test_image:latest", registry);
+        println!("{}", image_name);
         let directory = "./test_image";
 
         fs::create_dir_all(directory).expect("Failed to create test directory");
@@ -87,8 +95,9 @@ mod tests {
         let dockerfile_content = "FROM scratch\nCOPY . .\n";
         fs::write(&dockerfile_path, dockerfile_content).expect("Failed to write Dockerfile");
 
-        let result = execute_docker_build(directory, image_name).await;
-        assert!(result.is_ok());
+        let result = execute_docker_build(directory, &image_name).await;
+        result.unwrap();
+        // assert!(result.is_ok());
 
         fs::remove_dir_all(directory).expect("Failed to remove test directory");
     }
