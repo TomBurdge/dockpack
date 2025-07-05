@@ -37,7 +37,6 @@ pub async fn execute_docker_build(directory: &str, image: &str) -> Result<()> {
     let options = CreateImageOptionsBuilder::default()
         .from_src("-") // from_src must be "-" when sending the archive in the request body
         .repo(image) // The name of the image in the docker daemon.
-        .tag("1.0.0") // The tag of this particular image.
         .build();
     let _: Vec<CreateImageInfo> = docker
         .create_image(Some(options), Some(bollard::body_try_stream(stream)), None)
@@ -47,7 +46,7 @@ pub async fn execute_docker_build(directory: &str, image: &str) -> Result<()> {
 
     let options = PushImageOptionsBuilder::new().tag("latest").build();
     let _: Vec<PushImageInfo> = docker
-        .push_image(&cache::process_image_name(image), Some(options), None)
+        .push_image(image, Some(options), None)
         .try_collect()
         .await
         .with_context(|| "Could not push image")?;
