@@ -19,29 +19,13 @@ def test_execute_push():
     shutil.rmtree(directory)
 
 
+# This currently fails/panicks, because pushing to remote needs remote auth
 def test_push(test_image_dir, dockerfile_path):
     image_name = "test_image:latest"
     with open(dockerfile_path, "w") as f:
         f.write("FROM scratch\nCOPY . .\n")
     res = build_files_from_image(image_name, "./cache")
     assert res == dir
-
-
-# #[tokio::test]
-# async fn test_execute_push() {
-#     let image_name = "test_image:latest";
-#     let directory = "./test_image";
-#
-#     fs::create_dir_all(directory).expect("Failed to create test directory");
-#     let dockerfile_path = format!("{}/Dockerfile", directory);
-#     let dockerfile_content = "FROM scratch\nCOPY . .\n";
-#     fs::write(&dockerfile_path, dockerfile_content).expect("Failed to write Dockerfile");
-#
-#     let result = execute_docker_build(directory, image_name).await;
-#     assert!(result.is_ok());
-#
-#     // fs::remove_dir_all(directory).expect("Failed to remove test directory");
-#
 
 
 def test_build(test_image_dir):
