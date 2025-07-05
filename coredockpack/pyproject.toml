@@ -19,4 +19,6 @@ dynamic = ["version"]
 bindings = "cffi"
 
 [dependency-groups]
-dev = ["pytest>=8.3.5"]
+dev = [
+    "pytest>=8.3.5",
+]
